@@ -1,17 +1,17 @@
 import os
 import io
-from flask import Flask, request, send_file, render_template
+from flask import Flask, request, send_file, render_template, Blueprint
 import barcode
 import base64
 from barcode.writer import ImageWriter
 
-app = Flask(__name__)
+bp = Blueprint('main', __name__)
 
-@app.route('/')
+@bp.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/barcode')
+@bp.route('/barcode')
 def generate_barcode():
     # Retrieve the barcode data; default to a sample value if not provided
     text = request.args.get('text', '123456789012')
@@ -35,6 +35,3 @@ def generate_barcode():
     # Render the result template with the barcode image and the user-provided name
     return render_template('result.html', image=img_base64, name=user_name)
 
-if __name__ == '__main__':
-    # Railway sets the PORT environment variable automatically
-    app.run(host="0.0.0.0", port=8080, debug=False)
